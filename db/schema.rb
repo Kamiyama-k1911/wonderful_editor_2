@@ -26,8 +26,7 @@ ActiveRecord::Schema.define(version: 2021_01_18_201726) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
-    t.string "body"
-    t.string "text"
+    t.text "body"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -57,8 +56,6 @@ ActiveRecord::Schema.define(version: 2021_01_18_201726) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.string "name"
-    t.string "nickname"
-    t.string "image"
     t.string "email"
     t.json "tokens"
     t.datetime "created_at", precision: 6, null: false
