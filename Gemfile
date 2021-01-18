@@ -26,6 +26,7 @@ end
 group :development do
   gem "annotate"
   gem "listen", "~> 3.2"
+  gem "rails-erd"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
   gem "web-console", ">= 3.3.0"
