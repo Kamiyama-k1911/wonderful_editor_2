@@ -9,4 +9,5 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   has_many :articles
+  has_many :comments
 end
