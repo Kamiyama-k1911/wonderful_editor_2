@@ -24,6 +24,18 @@ RSpec.describe User, type: :model do
     end
   end
 
+  context "既に同じメールアドレスが存在している時" do
+    before do
+      create(:user,email:"hoge@example.com")
+    end
+
+    it "ユーザー作成に失敗する" do
+      user.email = "hoge@example.com"
+      expect(user).to be_invalid
+      expect(user.errors.details[:email][0][:error]).to eq :taken
+    end
+  end
+
   context "パスワードが指定されていない時" do
     it "ユーザー作成に失敗する" do
       user.password = nil
