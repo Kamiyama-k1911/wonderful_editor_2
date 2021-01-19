@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
     it "ユーザー作成に失敗する" do
       user.name = nil
       expect(user).to be_invalid
+      expect(user.errors.details[:name][0][:error]).to eq :blank
     end
   end
 
@@ -19,6 +20,7 @@ RSpec.describe User, type: :model do
     it "ユーザー作成に失敗する" do
       user.email = nil
       expect(user).to be_invalid
+      expect(user.errors.details[:email][0][:error]).to eq :blank
     end
   end
 
@@ -26,6 +28,7 @@ RSpec.describe User, type: :model do
     it "ユーザー作成に失敗する" do
       user.password = nil
       expect(user).to be_invalid
+      expect(user.errors.details[:password][0][:error]).to eq :blank
     end
   end
 end
