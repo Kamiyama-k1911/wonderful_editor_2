@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
 
   context "既に同じメールアドレスが存在している時" do
     before do
-      create(:user,email:"hoge@example.com")
+      create(:user, email: "hoge@example.com")
     end
 
     it "ユーザー作成に失敗する" do
