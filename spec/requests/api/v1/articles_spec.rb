@@ -131,7 +131,7 @@ RSpec.describe "Articles", type: :request do
 
       it "記事を削除できる" do
         expect { subject }.to change { Article.count }.by(-1)
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:no_content)
       end
     end
 
