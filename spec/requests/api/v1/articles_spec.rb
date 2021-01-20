@@ -117,9 +117,10 @@ RSpec.describe "Articles", type: :request do
   end
 
   fdescribe "DELETE /api/v1/articles/:id" do
-    subject { delete(api_v1_article_path(article.id)) }
+    subject { delete(api_v1_article_path(article_id)) }
 
     let(:current_user) { create(:user) }
+    let(:article_id) { article.id }
     before do
       base_api_controller = Api::V1::BaseApiController.new
       allow(base_api_controller).to receive(:current_user).and_return(current_user)
@@ -129,7 +130,7 @@ RSpec.describe "Articles", type: :request do
       let!(:article) { create(:article, user: current_user) }
 
       it "記事を削除できる" do
-        expect { subject }.to change { current_user.articles.count }.by(-1)
+        expect { subject }.to change { Article.count }.by(-1)
         expect(response).to have_http_status(:ok)
       end
     end
