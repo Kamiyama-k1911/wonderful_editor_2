@@ -55,16 +55,17 @@ RSpec.describe "Articles", type: :request do
 
   describe "POST /api/v1/articles" do
     subject { post(api_v1_articles_path,params: params) }
-    let!(:user) { create(:user) }
+    let!(:current_user) { create(:user) }
 
     context "適切なパラメーターを送った時" do
       let!(:params) { { article: attributes_for(:article) } }
+      before do
+        base_api_controller = Api::V1::BaseApiController.new
+        allow(base_api_controller).to receive(:current_user).and_return(current_user)
+      end
 
       it "記事作成に成功する" do
-        base_api_controller = Api::V1::BaseApiController.new
-        allow(base_api_controller).to receive(:current_user).and_return(user)
-
-        expect { subject }.to change { Article.count }.by(1)
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
         res = JSON.parse(response.body)
 
         # 送ったパラメータと作った記事のタイトルと内容が一致しているか

@@ -10,9 +10,9 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
   end
 
   def create
-    @article = current_user.articles.build(article_params)
-    @article.save
-    render json: @article
+    article = current_user.articles.build(article_params)
+    article.save
+    render json: article, serializer: Api::V1::ArticleSerializer
   end
 
   private
