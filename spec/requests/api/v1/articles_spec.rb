@@ -52,4 +52,36 @@ RSpec.describe "Articles", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/articles" do
+    subject { post(api_v1_articles_path, params: params) }
+
+    let!(:current_user) { create(:user) }
+
+    context "適切なパラメーターを送った時" do
+      let(:params) { { article: attributes_for(:article) } }
+      before do
+        base_api_controller = Api::V1::BaseApiController.new
+        allow(base_api_controller).to receive(:current_user).and_return(current_user)
+      end
+
+      it "記事作成に成功する" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+
+        # 送ったパラメータと作った記事のタイトルと内容が一致しているか
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "不適切なパラメーターを送った時" do
+      let(:params) { attributes_for(:article) }
+
+      it "記事作成に失敗する" do
+        expect { subject }.to raise_error ActionController::ParameterMissing
+      end
+    end
+  end
 end
