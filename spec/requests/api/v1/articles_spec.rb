@@ -22,7 +22,7 @@ RSpec.describe "Articles", type: :request do
     end
   end
 
-  fdescribe "GET /api/v1/articles/:id" do
+  describe "GET /api/v1/articles/:id" do
     subject { get(api_v1_article_path(article_id)) }
 
     context "指定したidの記事が存在する場合" do
@@ -48,7 +48,7 @@ RSpec.describe "Articles", type: :request do
       let(:article_id) { 10000 }
 
       it "記事の詳細が取得できない" do
-        expect{ subject }.to raise_error ActiveRecord::RecordNotFound
+        expect { subject }.to raise_error ActiveRecord::RecordNotFound
       end
     end
   end
