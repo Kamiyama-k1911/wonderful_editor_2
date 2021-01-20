@@ -8,4 +8,15 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
     @article = Article.find(params[:id])
     render json: @article
   end
+
+  def create
+    @article = current_user.articles.build(article_params)
+    @article.save
+  end
+
+  private
+
+  def article_params
+    params.require(:article).permit(:title,:body)
+  end
 end
