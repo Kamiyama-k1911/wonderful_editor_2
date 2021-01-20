@@ -11,6 +11,7 @@ gem "puma", "~> 4.1"
 gem "rails", "~> 6.0.3", ">= 6.0.3.2"
 gem "turbolinks", "~> 5"
 gem "webpacker", "~> 4.0"
+gem "nokogiri", ">= 1.11.0.rc4"
 
 group :development, :test do
   gem "factory_bot_rails"
