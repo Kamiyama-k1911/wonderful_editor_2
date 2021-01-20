@@ -21,4 +21,21 @@ RSpec.describe "Articles", type: :request do
       expect(response).to have_http_status :ok
     end
   end
+
+  fdescribe "GET /api/v1/articles/:id" do
+    subject { get(api_v1_article_path(article.id)) }
+
+    let!(:article) { create(:article) }
+
+    it "記事の詳細が取得できる" do
+      subject
+
+      res = JSON.parse(response.body)
+
+      expect(res.keys).to eq ["id", "title","body", "updated_at", "user"]
+      expect(res["user"].length).to eq 3
+      expect(res["user"].keys).to eq ["id", "name", "email"]
+      expect(response).to have_http_status :ok
+    end
+  end
 end
