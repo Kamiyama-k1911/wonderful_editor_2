@@ -12,6 +12,7 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
   def create
     @article = current_user.articles.build(article_params)
     @article.save
+    render json: @article
   end
 
   private
