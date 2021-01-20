@@ -11,13 +11,13 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
 
   def create
     article = current_user.articles.build(article_params)
-    article.save
+    article.save!
     render json: article, serializer: Api::V1::ArticleSerializer
   end
 
   private
 
-  def article_params
-    params.require(:article).permit(:title,:body)
-  end
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
 end

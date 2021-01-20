@@ -54,11 +54,12 @@ RSpec.describe "Articles", type: :request do
   end
 
   describe "POST /api/v1/articles" do
-    subject { post(api_v1_articles_path,params: params) }
+    subject { post(api_v1_articles_path, params: params) }
+
     let!(:current_user) { create(:user) }
 
     context "適切なパラメーターを送った時" do
-      let!(:params) { { article: attributes_for(:article) } }
+      let(:params) { { article: attributes_for(:article) } }
       before do
         base_api_controller = Api::V1::BaseApiController.new
         allow(base_api_controller).to receive(:current_user).and_return(current_user)
@@ -76,7 +77,7 @@ RSpec.describe "Articles", type: :request do
     end
 
     context "不適切なパラメーターを送った時" do
-      let!(:params) { attributes_for(:article) }
+      let(:params) { attributes_for(:article) }
 
       it "記事作成に失敗する" do
         expect { subject }.to raise_error ActionController::ParameterMissing
