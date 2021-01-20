@@ -84,4 +84,29 @@ RSpec.describe "Articles", type: :request do
       end
     end
   end
+
+  fdescribe "PATCH /api/v1/articles/:id" do
+    subject { patch(api_v1_article_path(article_id), params: params) }
+
+    let!(:user) { create(:user) }
+    let!(:article) { create(:article) }
+    let!(:article_id) { article.id }
+
+    context "適切なパラメーターを送った時" do
+      let(:params) { { article: attributes_for(:article) } }
+
+      it "記事編集できる" do
+        subject
+        res = JSON.parse(response.body)
+
+        # 送ったパラメータと作った記事のタイトルと内容が一致しているか
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(res["title"]).not_to eq article.title
+        expect(res["body"]).not_to eq article.body
+        binding.pry
+        expect(response).to have_http_status :ok
+      end
+    end
+  end
 end
