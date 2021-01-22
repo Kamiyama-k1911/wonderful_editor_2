@@ -5,7 +5,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
   has_many :articles, dependent: :destroy
@@ -13,6 +13,4 @@ class User < ApplicationRecord
   has_many :article_likes, dependent: :destroy
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :password, presence: true
 end
