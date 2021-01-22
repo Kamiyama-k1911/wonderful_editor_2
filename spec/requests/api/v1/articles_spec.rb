@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.fdescribe "Articles", type: :request do
+RSpec.describe "Articles", type: :request do
   describe "GET /api/v1/articles" do
     subject { get(api_v1_articles_path) }
 
@@ -53,17 +53,14 @@ RSpec.fdescribe "Articles", type: :request do
     end
   end
 
+
   describe "POST /api/v1/articles" do
-    subject { post(api_v1_articles_path, params: params) }
+    subject { post(api_v1_articles_path, params: params, headers: headers) }
 
     let!(:current_user) { create(:user) }
-
+    let!(:headers) { current_user.create_new_auth_token }
+    let(:params) { { article: attributes_for(:article) } }
     context "適切なパラメーターを送った時" do
-      let(:params) { { article: attributes_for(:article) } }
-      before do
-        base_api_controller = Api::V1::BaseApiController.new
-        allow(base_api_controller).to receive(:current_user).and_return(current_user)
-      end
 
       it "記事作成に成功する" do
         expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
@@ -83,20 +80,28 @@ RSpec.fdescribe "Articles", type: :request do
         expect { subject }.to raise_error ActionController::ParameterMissing
       end
     end
+
+    context "ログインしていない時" do
+      subject { post(api_v1_articles_path, params: params) }
+
+      it "記事投稿できない" do
+        subject
+        res = JSON.parse(response.body)
+
+        expect(res["errors"]).to include "You need to sign in or sign up before continuing."
+        expect(response).to have_http_status :unauthorized
+      end
+    end
   end
 
   describe "PATCH /api/v1/articles/:id" do
-    subject { patch(api_v1_article_path(article.id), params: params) }
+    subject { patch(api_v1_article_path(article.id), params: params, headers: headers) }
 
     let(:params) { { article: attributes_for(:article) } }
     let(:current_user) { create(:user) }
-    before do
-      base_api_controller = Api::V1::BaseApiController.new
-      allow(base_api_controller).to receive(:current_user).and_return(current_user)
-    end
-
+    let!(:headers) { current_user.create_new_auth_token }
+    let(:article) { create(:article, user: current_user) }
     context "自分が所持している記事のレコードを更新しようとするとき" do
-      let(:article) { create(:article, user: current_user) }
 
       it "記事を更新できる" do
         expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
@@ -114,20 +119,28 @@ RSpec.fdescribe "Articles", type: :request do
                               change { Article.count }.by(0)
       end
     end
+
+    context "ログインしていない時" do
+      subject { patch(api_v1_article_path(article.id), params: params) }
+
+      it "記事更新できない" do
+        subject
+        res = JSON.parse(response.body)
+
+        expect(res["errors"]).to include "You need to sign in or sign up before continuing."
+        expect(response).to have_http_status :unauthorized
+      end
+    end
   end
 
   describe "DELETE /api/v1/articles/:id" do
-    subject { delete(api_v1_article_path(article_id)) }
+    subject { delete(api_v1_article_path(article_id), headers: headers) }
 
     let(:current_user) { create(:user) }
     let(:article_id) { article.id }
-    before do
-      base_api_controller = Api::V1::BaseApiController.new
-      allow(base_api_controller).to receive(:current_user).and_return(current_user)
-    end
-
+    let!(:headers) { current_user.create_new_auth_token }
+    let!(:article) { create(:article, user: current_user) }
     context "自分が所持している記事のレコードを削除しようとするとき" do
-      let!(:article) { create(:article, user: current_user) }
 
       it "記事を削除できる" do
         expect { subject }.to change { Article.count }.by(-1)
@@ -142,6 +155,18 @@ RSpec.fdescribe "Articles", type: :request do
       it "削除できない" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
                               change { Article.count }.by(0)
+      end
+    end
+
+    context "ログインしていない時" do
+      subject { delete(api_v1_article_path(article_id)) }
+
+      it "記事削除できない" do
+        subject
+        res = JSON.parse(response.body)
+
+        expect(res["errors"]).to include "You need to sign in or sign up before continuing."
+        expect(response).to have_http_status :unauthorized
       end
     end
   end
