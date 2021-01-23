@@ -1,5 +1,5 @@
 class Article < ApplicationRecord
-  enum article_status: { draft: 0, published: 1 }
+  enum article_status: { draft: "draft", published: "published" }
 
   belongs_to :user
   has_many :comments, dependent: :destroy
