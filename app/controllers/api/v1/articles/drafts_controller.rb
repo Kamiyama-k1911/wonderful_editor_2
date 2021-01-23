@@ -1,4 +1,4 @@
-class Api::V1::DraftController < Api::V1::BaseApiController
+class Api::V1::Articles::DraftsController < Api::V1::BaseApiController
   before_action :authenticate_user!
 
   def index
@@ -8,6 +8,6 @@ class Api::V1::DraftController < Api::V1::BaseApiController
 
   def show
     @article = current_user.articles.draft.find(params[:id])
-    render json: @article
+    render json: @article, each_serializer: Api::V1::ArticleSerializer
   end
 end

@@ -1,20 +1,20 @@
-require 'rails_helper'
+require "rails_helper"
 
-RSpec.fdescribe "Api::V1::Drafts", type: :request do
+RSpec.describe "Api::V1::Articles::Drafts", type: :request do
   let!(:current_user) { create(:user) }
   let(:headers) { current_user.create_new_auth_token }
 
   describe "GET /api/v1/articles/draft" do
-    subject { get(api_v1_draft_index_path, headers: headers) }
+    subject { get(api_v1_articles_drafts_path, headers: headers) }
 
     let!(:article1) { create(:article, :draft, user_id: current_user.id, updated_at: 1.days.ago) }
     let!(:article2) { create(:article, :draft, user_id: current_user.id, updated_at: 2.days.ago) }
     let!(:article3) { create(:article, :draft, user_id: current_user.id) }
 
-    # 別ユーザーの下書き記事
-    let!(:article4) { create(:article, :draft) }
-
-    before { create(:article, :published) }
+    before do
+      create(:article, :published)
+      create(:article, :draft)
+    end
 
     it "下書き記事の一覧が取得できる(更新順)" do
       subject
@@ -29,7 +29,7 @@ RSpec.fdescribe "Api::V1::Drafts", type: :request do
   end
 
   describe "GET /api/v1/articles/draft/:id" do
-    subject { get(api_v1_draft_path(article.id), headers: headers) }
+    subject { get(api_v1_articles_draft_path(article.id), headers: headers) }
 
     let(:article) { create(:article, :draft, user_id: current_user.id) }
     let(:article_id) { article.id }
@@ -43,8 +43,6 @@ RSpec.fdescribe "Api::V1::Drafts", type: :request do
       expect(res["title"]).to eq article.title
       expect(res["body"]).to eq article.body
       expect(res["updated_at"]).to be_present
-      expect(res["user"]["id"]).to eq article.user.id
-      expect(res["user"].keys).to eq ["id", "name", "email"]
     end
 
     context "対象の記事が公開状態であるとき" do
