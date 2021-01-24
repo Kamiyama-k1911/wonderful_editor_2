@@ -15,8 +15,8 @@ Rails.application.routes.draw do
       namespace :articles do
         resources :drafts, only: [:index, :show]
       end
-      scope :current do
-        get "articles", to: "mypages#index"
+      namespace :current do
+        resources :articles, only: [:index]
       end
       resources :articles
     end

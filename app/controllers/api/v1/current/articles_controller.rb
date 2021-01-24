@@ -1,4 +1,4 @@
-class Api::V1::MypagesController < Api::V1::BaseApiController
+class Api::V1::Current::ArticlesController < Api::V1::BaseApiController
   before_action :authenticate_user!
 
   def index
