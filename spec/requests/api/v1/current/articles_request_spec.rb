@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Api::V1::Current::Articles", type: :request do
   let!(:current_user) { create(:user) }
   let(:headers) { current_user.create_new_auth_token }
 
-  fdescribe "GET /api/v1/current/articles" do
+  describe "GET /api/v1/current/articles" do
     subject { get(api_v1_current_articles_path, headers: headers) }
 
     let!(:article1) { create(:article, :published, user_id: current_user.id, updated_at: 1.days.ago) }
